@@ -1,5 +1,5 @@
 # imgplayer
-Image sequence player jQuery plugin with. 
+Image sequence player jQuery plugin. 
 Fork of https://github.com/nterms/imgplay/ 
 
 ## Dev
