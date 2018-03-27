@@ -1,0 +1,30 @@
+.sarine_imgplay {
+
+    position: relative;
+    
+    img {
+        max-width: 100%;
+    }
+
+    canvas {
+        left: 0;
+        position: absolute;
+        top: 0;
+    }
+
+    .imgplay-progress {
+        bottom: 0;
+        height: 100%;
+        position: absolute;
+        width: 100%;
+        top: 0;
+        left: 0;
+        opacity: 0;
+
+        .imgplay-play-bar {
+            background: #000;
+            height: 4px;
+            width: 0%;
+        }
+    }
+}

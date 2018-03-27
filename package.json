@@ -1,0 +1,26 @@
+{
+  "name": "sarine.plugin.imgplayer",
+  "version": "0.1.0",
+  "description": "jQuery plugin: image sequence player. Fork of https://github.com/nterms/imgplay/",
+  "keywords": [
+    "image",
+    "img",
+    "player",
+    "play",
+    "jQuery",
+    "plugin"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-connect": "^5.5.0",
+    "gulp-eslint": "^2.0.0",
+    "gulp-if": "^2.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.2.0",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-uglify": "^3.0.0",
+    "gulp-util": "^3.0.7",
+    "yargs": "^4.3.2"
+  }
+}
