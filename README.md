@@ -11,6 +11,8 @@ npm -i
 gulp
 ~~~
 
+then go to http://localhost:8080/
+
 ## Usage
 
 Add styles inside `<head>` tag.
