@@ -68,6 +68,7 @@ Now invoke the player.
 
 Following options are currently available for configuring the plugin.
 
+- `startImage` - First image number (like in img1.jpg or img0.jpg)
 - `totalImages` - Number of images (mandatory)
 - `imageName` - Image nape pattern. Example: 'Image_{num}.jpg'. {num} is required inside a string (mandatory)
 - `urlDir` - URL of images directory (mandatory)
