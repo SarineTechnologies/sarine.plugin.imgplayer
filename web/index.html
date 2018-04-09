@@ -29,18 +29,25 @@
                 
                 function loadImages (isWebP) {
                     
-                    var path = isWebP ? 'webp_' : 'jpeg_';
-                    var format = isWebP ? '.jpg.webp': '.jpg';
-                    var url = 'https://d3oayecwxm3wp6.cloudfront.net/qa3/demo/new_loupe_poc/' + path + '318_80/Image_{num}' + format;
+                    // var path = isWebP ? 'webp_' : 'jpeg_';
+                    // var format = isWebP ? '.jpg.webp': '.jpg';
+                    // var url = 'https://d3oayecwxm3wp6.cloudfront.net/qa3/demo/new_loupe_poc/' + path + '318_80_452px/Image_{num}' + format;
+                    
+                    var path = isWebP ? '452_webp' : '452_jpeg';
+                    var format = isWebP ? '.webp': '.jpg';
+                    var url = 'https://d3oayecwxm3wp6.cloudfront.net/qa3/demo/new_loupe_poc/convention/Pavilion/' + path + '/img{num}' + format;
 
                     $('#imageplayer')
                         .imgplay({
+                            startImage: 0,
+                            // startImage: 1,
                             totalImages: 318,
-                            imageName: 'Image_{num}' + format,                            
+                            imageName: 'img{num}' + format,                            
+                            // imageName: 'Image_{num}' + format,                            
                             urlDir: url,
                             rate: 30,
-                            height: 225,
-                            width: 250,
+                            height: 452,
+                            width: 452,
                             autoPlay: true 
                         })
                         .on("play", function (event, plugin) {
