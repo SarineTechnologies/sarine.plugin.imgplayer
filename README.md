@@ -7,7 +7,7 @@ Fork of https://github.com/nterms/imgplay/
 Run:
 
 ~~~
-npm -i
+npm i
 gulp
 ~~~
 
