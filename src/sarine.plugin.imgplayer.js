@@ -50,7 +50,7 @@
             for (var i = plugin.settings.startImage; i < plugin.settings.totalImages + plugin.settings.startImage; ++i) {
                 img = '<img class="imageplay_loaded" src="' + plugin.settings.urlDir.replace('{num}', i) + '" />';
                 $el.append(img);
-                plugin.frames[i++] = $(img).get(0);
+                plugin.frames[i+1] = $(img).get(0);
             }
             
             $el.addClass('sarine_imgplay');
