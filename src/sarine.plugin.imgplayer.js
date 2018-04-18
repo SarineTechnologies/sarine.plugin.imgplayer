@@ -9,7 +9,8 @@
             rate: null,
             height: null,
             width: null,
-            autoPlay: true
+            autoPlay: true,
+            autoReverse: false
         };
 
         var el = element;
@@ -93,7 +94,7 @@
             if(playTimer != null) {
                 clearTimeout(playTimer);
             }
-
+            
             drawFrame();
             $el.trigger('play');
         };
@@ -109,6 +110,8 @@
         plugin.stop = function() {
             playing = false;
             index = 0;
+            if(plugin.settings.autoReverse)
+                plugin.frames.reverse();
             plugin.play();
             $el.trigger('stop', plugin);
         };

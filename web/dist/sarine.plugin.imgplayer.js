@@ -2,13 +2,15 @@
 
     $.imgplay = function(element, options) {
         var defaults = {
+            startImage: 0,
             totalImages: null,
             imageName: null,                            
             urlDir: null,
             rate: null,
             height: null,
             width: null,
-            autoPlay: true
+            autoPlay: true,
+            autoReverse: false
         };
 
         var el = element;
@@ -46,17 +48,18 @@
             // Load images
             var img;
             total = plugin.settings.totalImages;
-            for (var i=1; i<=plugin.settings.totalImages; ++i) {
+            for (var i = plugin.settings.startImage; i < plugin.settings.totalImages + plugin.settings.startImage; ++i) {
                 img = '<img class="imageplay_loaded" src="' + plugin.settings.urlDir.replace('{num}', i) + '" />';
                 $el.append(img);
-                plugin.frames[i] = $(img).get(0);
+                plugin.frames[i+1] = $(img).get(0);
             }
             
             $el.addClass('sarine_imgplay');
             $el.css({height: options.height, width: options.width});
-
+            
             // Create canvas
             $canvas = $('<canvas class="imgplay-canvas">');
+            // $canvas.prop({height: $(plugin.frames[0]).height(), width: $(plugin.frames[0]).width()});
             $canvas.prop({height: options.height, width: options.width});
             
             screen = $canvas.get(0).getContext('2d');
@@ -80,7 +83,9 @@
                 plugin.play();
             }
             else {
-                plugin.toFrame(1);
+                setTimeout(function () {
+                    plugin.toFrame(plugin.settings.startImage);
+                }, 500);
             }
         };
 
@@ -89,7 +94,7 @@
             if(playTimer != null) {
                 clearTimeout(playTimer);
             }
-
+            
             drawFrame();
             $el.trigger('play');
         };
@@ -105,6 +110,8 @@
         plugin.stop = function() {
             playing = false;
             index = 0;
+            if(plugin.settings.autoReverse)
+                plugin.frames.reverse();
             plugin.play();
             $el.trigger('stop', plugin);
         };
@@ -221,6 +228,7 @@
                 var $img = $(img);
 
                 if (img && $img.prop('naturalHeight') > 0) {
+                    /*
                     var cw = $canvas.width();
                     var ch = $canvas.height();
                     var iw = img.width;
@@ -236,7 +244,10 @@
                         vh = ih * (cw/iw);
                     }
                     screen.clearRect(0, 0, cw, ch);
-                    screen.drawImage(img, (cw - vw) / 2, (ch - vh) / 2, vw, vh);                    
+                    screen.drawImage(img, (cw - vw) / 2, (ch - vh) / 2, vw, vh);*/
+                    
+                    screen.clearRect(0, 0, options.width, options.height);
+                    screen.drawImage(img, 0, 0, options.width, options.height);                    
                 } 
 
                 if (index > plugin.frames.length) {
