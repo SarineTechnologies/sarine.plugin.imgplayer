@@ -10,8 +10,10 @@ var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var connect = require('gulp-connect');
 var maps   = require('gulp-sourcemaps');
+var dist = decideDist();
 
 gulp.task('default', ['watch', 'copy-src', 'sass', 'lint', 'uglify', 'webserver']);
+gulp.task('build', ['copy-src', 'sass', 'uglify']);
 
 gulp.task('webserver', function() {
     connect.server({
@@ -24,12 +26,12 @@ gulp.task('sass', function() {
     return gulp.src('./src/sarine.plugin.imgplayer.scss')
         .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
         .pipe(rename({suffix: '.min'}))
-        .pipe(gulp.dest('./web/dist'));
+        .pipe(gulp.dest(dist));
 });
 
 gulp.task('copy-src', function() {
     return gulp.src('./src/sarine.plugin.imgplayer.js')
-        .pipe(gulp.dest('./web/dist'));
+        .pipe(gulp.dest(dist));
 });
 
 gulp.task('uglify', function() {
@@ -38,7 +40,7 @@ gulp.task('uglify', function() {
         .pipe(uglify())
         .pipe(rename({suffix: '.min'}))
         .pipe(maps.write('./'))
-        .pipe(gulp.dest('./web/dist'));
+        .pipe(gulp.dest(dist));
 });
 
 gulp.task('lint', function() {
@@ -59,3 +61,16 @@ gulp.task('watch', function() {
         gulp.watch('./src/sarine.plugin.imgplayer.js', ['lint','uglify']);
     }
 });
+
+function decideDist() {
+    if(process.env.buildFor == 'deploy')
+    {
+        console.log("dist is github folder");
+        return './dist/';
+    }
+    else
+    {
+        console.log("dist is local");
+        return '../../../dist/content/viewers/atomic/v1/assets/';
+    }
+}
