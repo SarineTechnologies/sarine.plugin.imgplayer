@@ -76,3 +76,5 @@ Following options are currently available for configuring the plugin.
 - `height` - Height of canvas (mandatory) 
 - `width` - Width of canvas (mandatory)
 - `autoPlay` - is auto play, default true. If false, it's possible to run play on demand using `$('#imageplayer').data('imgplay').play();`
+- `autoReverse` - is auto reverse, default false. If true plays the images from 0-N and then N-0 and so on
+- `userInteraction` - enable user interaction - mouse/touch events, default true

@@ -10,7 +10,8 @@
             height: null,
             width: null,
             autoPlay: true,
-            autoReverse: false
+            autoReverse: false,
+            userInteraction: true
         };
 
         var el = element;
@@ -48,45 +49,50 @@
             // Load images
             var img;
             total = plugin.settings.totalImages;
-            for (var i = plugin.settings.startImage; i < plugin.settings.totalImages + plugin.settings.startImage; ++i) {
-                img = '<img class="imageplay_loaded" src="' + plugin.settings.urlDir.replace('{num}', i) + '" />';
-                $el.append(img);
-                plugin.frames[i+1] = $(img).get(0);
-            }
-            
-            $el.addClass('sarine_imgplay');
-            $el.css({height: options.height, width: options.width});
-            
-            // Create canvas
-            $canvas = $('<canvas class="imgplay-canvas">');
-            // $canvas.prop({height: $(plugin.frames[0]).height(), width: $(plugin.frames[0]).width()});
-            $canvas.prop({height: options.height, width: options.width});
-            
-            screen = $canvas.get(0).getContext('2d');
-            $el.append($canvas);
-            
-            initEvents();
 
-            // remove images from DOM
-            $el.find('img.imageplay_loaded').detach();
+            img = '<img src="' + plugin.settings.urlDir.replace('{num}', plugin.settings.startImage) + '" />';                      
+            $(img).get(0).onload = function() {
 
-            // default frame rate
-            if ( ! plugin.settings.rate ) {
-                plugin.settings.rate = parseInt(plugin.frames.length / 10);
-            }
+                for (var i = plugin.settings.startImage; i < plugin.settings.totalImages + plugin.settings.startImage; ++i) {
+                    img = '<img class="imageplay_loaded" src="' + plugin.settings.urlDir.replace('{num}', i) + '" />';
+                    $el.append(img);
+                    plugin.frames[i+1] = $(img).get(0);
+                }
+            
+                $el.addClass('sarine_imgplay');
+                $el.css({height: options.height, width: options.width});
+                
+                // Create canvas
+                $canvas = $('<canvas class="imgplay-canvas">');
+                // $canvas.prop({height: $(plugin.frames[0]).height(), width: $(plugin.frames[0]).width()});
+                $canvas.prop({height: options.height, width: options.width});
+                
+                screen = $canvas.get(0).getContext('2d');
+                $el.append($canvas);
 
-            // max rate is 100 fps and min rate is 0.001 fps
-            plugin.settings.rate = (plugin.settings.rate < 0.001) ? 0.001 : plugin.settings.rate;
-            plugin.settings.rate = (plugin.settings.rate > 100) ? 100 : plugin.settings.rate;
+                initEvents();
 
-            if (plugin.settings.autoPlay) {
-                plugin.play();
-            }
-            else {
-                setTimeout(function () {
-                    plugin.toFrame(plugin.settings.startImage);
-                }, 500);
-            }
+                // remove images from DOM
+                $el.find('img.imageplay_loaded').detach();
+
+                // default frame rate
+                if ( ! plugin.settings.rate ) {
+                    plugin.settings.rate = parseInt(plugin.frames.length / 10);
+                }
+
+                // max rate is 100 fps and min rate is 0.001 fps
+                plugin.settings.rate = (plugin.settings.rate < 0.001) ? 0.001 : plugin.settings.rate;
+                plugin.settings.rate = (plugin.settings.rate > 100) ? 100 : plugin.settings.rate;
+
+                if (plugin.settings.autoPlay) {
+                    plugin.play();
+                }
+                else {
+                    setTimeout(function () {
+                        plugin.toFrame(plugin.settings.startImage == 0 ? 1 : plugin.settings.startImage);
+                    }, 500);
+                }
+            };
         };
 
         plugin.play = function() {
@@ -110,8 +116,10 @@
         plugin.stop = function() {
             playing = false;
             index = 0;
-            if(plugin.settings.autoReverse)
+            if (plugin.settings.autoReverse) {
                 plugin.frames.reverse();
+                index = plugin.frames[index] ? index + 1 : index + 2;
+            }
             plugin.play();
             $el.trigger('stop', plugin);
         };
@@ -204,19 +212,19 @@
                 curPosX = 0,
                 prevPosX = 0,
                 isRightDirection = false;
-
-            progress
-                .on('mousedown touchstart', function(e) {
-                    e.preventDefault();
-                    startMove(e);                  
-                })
-                .on('mousemove touchmove', function(e) {
-                    e.preventDefault();
-                    move(e);
-                })
-                .on('mouseleave mouseup touchend', function(e) {
-                    finishMove(e);
-                });
+            if (plugin.settings.userInteraction)
+                progress
+                    .on('mousedown touchstart', function(e) {
+                        e.preventDefault();
+                        startMove(e);                  
+                    })
+                    .on('mousemove touchmove', function(e) {
+                        e.preventDefault();
+                        move(e);
+                    })
+                    .on('mouseleave mouseup touchend', function(e) {
+                        finishMove(e);
+                    });
 
             progress.append(playBar);
             $el.append(progress);
@@ -226,7 +234,7 @@
             if (screen != null) {
                 var img = plugin.frames[index];
                 var $img = $(img);
-
+               
                 if (img && $img.prop('naturalHeight') > 0) {
                     /*
                     var cw = $canvas.width();
@@ -245,10 +253,10 @@
                     }
                     screen.clearRect(0, 0, cw, ch);
                     screen.drawImage(img, (cw - vw) / 2, (ch - vh) / 2, vw, vh);*/
-                    
+
                     screen.clearRect(0, 0, options.width, options.height);
                     screen.drawImage(img, 0, 0, options.width, options.height);                    
-                } 
+                }
 
                 if (index > plugin.frames.length) {
                     plugin.stop();
