@@ -11,7 +11,8 @@
             width: null,
             autoPlay: true,
             autoReverse: false,
-            userInteraction: true
+            userInteraction: true,
+            interactionMode: 'default'
         };
 
         var el = element;
@@ -27,7 +28,7 @@
         var playTimer = null;
         var loadProgress = 0;
         var playProgress = 0;
-
+        var isUserInteraction = false;
         var plugin = this;
         plugin.settings = {};
         plugin.frames = [];
@@ -213,18 +214,31 @@
                 prevPosX = 0,
                 isRightDirection = false;
             if (plugin.settings.userInteraction)
-                progress
-                    .on('mousedown touchstart', function(e) {
-                        e.preventDefault();
-                        startMove(e);                  
-                    })
-                    .on('mousemove touchmove', function(e) {
-                        e.preventDefault();
-                        move(e);
-                    })
-                    .on('mouseleave mouseup touchend', function(e) {
-                        finishMove(e);
-                    });
+            {
+                switch (plugin.settings.interactionMode)
+                {
+                    default:
+                        progress
+                        .on('mousedown touchstart', function(e) {
+                            e.preventDefault();
+                            isUserInteraction = true;
+                            startMove(e);                
+                        })
+                        .on('mousemove touchmove', function(e) {
+                            e.preventDefault();
+                            if( !playing && !plugin.settings.autoPlay && !isUserInteraction )
+                                return;
+                            move(e);
+                        })
+                        .on('mouseleave mouseup touchend', function(e) {
+                            if( !playing && !plugin.settings.autoPlay && !isUserInteraction )
+                                return;
+
+                            finishMove(e);
+                        });
+                    break;
+                }
+            }
 
             progress.append(playBar);
             $el.append(progress);
