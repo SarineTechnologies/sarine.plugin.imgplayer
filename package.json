@@ -1,6 +1,6 @@
 {
   "name": "sarine.plugin.imgplayer",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "jQuery plugin: image sequence player. Fork of https://github.com/nterms/imgplay/",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
