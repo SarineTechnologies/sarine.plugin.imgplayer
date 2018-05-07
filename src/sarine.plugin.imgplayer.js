@@ -248,7 +248,6 @@
             if (screen != null) {
                 var img = plugin.frames[index];
                 var $img = $(img);
-
                 if (img && $img.prop('naturalHeight') > 0) {
                     /*
                     var cw = $canvas.width();
@@ -272,7 +271,7 @@
                     screen.drawImage(img, 0, 0, options.width, options.height);                    
                 }
 
-                if (index > (plugin.frames.length -1)) {
+                if (index >= (plugin.frames.length -1)) {
                     plugin.stop();
                     return;
                 }
