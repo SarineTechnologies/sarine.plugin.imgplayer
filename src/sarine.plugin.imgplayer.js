@@ -116,7 +116,11 @@
 
         plugin.stop = function() {
             playing = false;
-            index = 0;
+            if (direction == 'forward')
+                index = 0;
+            else
+                index = plugin.frames.length - 1;
+
             if (plugin.settings.autoReverse) {
                 plugin.frames.reverse();
                 index = plugin.frames[index] ? index + 1 : index + 2;
@@ -271,7 +275,7 @@
                     screen.drawImage(img, 0, 0, options.width, options.height);                    
                 }
 
-                if (index >= (plugin.frames.length -1)) {
+                if (index >= (plugin.frames.length -1) && direction == 'forward') {
                     plugin.stop();
                     return;
                 }
@@ -284,7 +288,8 @@
                         index--;
 
                         if (index < 0) {
-                            index = plugin.frames.length + index;
+                            plugin.stop();
+                            return;
                         }
                     }
 
