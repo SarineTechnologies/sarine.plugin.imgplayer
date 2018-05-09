@@ -30,6 +30,7 @@
         var playProgress = 0;
         var isUserInteraction = false;
         var plugin = this;
+        var imgExist = true;
         plugin.settings = {};
         plugin.frames = [];
 
@@ -57,7 +58,8 @@
                 for (var i = plugin.settings.startImage; i < plugin.settings.totalImages + plugin.settings.startImage; ++i) {
                     img = '<img class="imageplay_loaded" src="' + plugin.settings.urlDir.replace('{num}', i) + '" />';
                     $el.append(img);
-                    plugin.frames[i+1] = $(img).get(0);
+                    // plugin.frames[i+1] = $(img).get(0);
+                    plugin.frames[i] = $(img).get(0);
                 }
             
                 $el.addClass('sarine_imgplay');
@@ -250,9 +252,10 @@
 
         var drawFrame = function() {
             if (screen != null) {
+                imgExist = true;
                 var img = plugin.frames[index];
                 var $img = $(img);
-                if (img && $img.prop('naturalHeight') > 0) {
+                if (img && img.complete && $img.prop('naturalHeight') > 0) {
                     /*
                     var cw = $canvas.width();
                     var ch = $canvas.height();
@@ -270,10 +273,11 @@
                     }
                     screen.clearRect(0, 0, cw, ch);
                     screen.drawImage(img, (cw - vw) / 2, (ch - vh) / 2, vw, vh);*/
-
-                    screen.clearRect(0, 0, options.width, options.height);
-                    screen.drawImage(img, 0, 0, options.width, options.height);                    
+                    //screen.clearRect(0, 0, options.width, options.height);
+                    screen.drawImage(img, 0, 0, options.width, options.height);                
                 }
+                else
+                    imgExist = false;
 
                 if (index >= (plugin.frames.length -1) && direction == 'forward') {
                     plugin.stop();
@@ -282,18 +286,24 @@
 
                 if (playing) {
                     if (direction == 'forward') {
-                        index++;
+                        if(imgExist)
+                            index++;
                     } 
                     else {
-                        index--;
+                        if(imgExist)
+                        {
+                            index--;
 
-                        if (index < 0) {
-                            plugin.stop();
-                            return;
+                            if (index < 0) {
+                                plugin.stop();
+                                return;
+                            }
                         }
                     }
 
-                    playTimer = setTimeout(drawFrame, Math.ceil(1000 / plugin.settings.rate));
+                    var curRate = Math.ceil(1000 / (plugin.settings.rate) );
+
+                    playTimer = setTimeout(drawFrame, curRate);
                 }
 
                 drawProgress();
