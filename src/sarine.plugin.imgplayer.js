@@ -204,7 +204,14 @@
                     index = total + index;
                 }
 
-                plugin.toFrame(index);        
+                //plugin.toFrame(index);
+                //draw image
+                var img = plugin.frames[index];
+                var $img = $(img);
+                if (img && img.complete && $img.prop('naturalHeight') > 0) {
+                    screen.drawImage(img, 0, 0, options.width, options.height);  
+                }
+
                 prevPosX = curPosX;
             }
 
