@@ -51,6 +51,8 @@ Now invoke the player.
                     width: 250,
                     autoPlay: true
                 })
+                .on("firstimgloaded", function (event, plugin) {
+                })
                 .on("play", function (event, plugin) {
                 })
                 .on("pause", function (event, plugin) {
