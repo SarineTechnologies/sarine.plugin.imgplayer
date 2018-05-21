@@ -54,6 +54,7 @@
 
             img = '<img src="' + plugin.settings.urlDir.replace('{num}', plugin.settings.startImage) + '" />';                      
             $(img).get(0).onload = function() {
+                $el.trigger('firstimgloaded');
 
                 for (var i = plugin.settings.startImage; i < plugin.settings.totalImages + plugin.settings.startImage; ++i) {
                     img = '<img class="imageplay_loaded" src="' + plugin.settings.urlDir.replace('{num}', i) + '" />';
