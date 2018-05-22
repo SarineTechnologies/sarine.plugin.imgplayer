@@ -1,5 +1,12 @@
 (function($) {
 
+    // Check if plugin is already loaded
+    if (window.sarineAssets && window.sarineAssets.imagePlayerPlugin) 
+        return false;    
+    
+    if ( ! window.sarineAssets) window.sarineAssets = {};
+    if ( ! window.sarineAssets.imagePlayerPlugin) window.sarineAssets.imagePlayerPlugin = true;
+        
     $.imgplay = function(element, options) {
         var defaults = {
             startImage: 0,
