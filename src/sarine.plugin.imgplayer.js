@@ -37,6 +37,11 @@
         plugin.init = function() {
             plugin.settings = $.extend({}, defaults, options);
             
+            // default frame rate
+            if ( ! plugin.settings.rate ) {
+                plugin.settings.rate = parseInt(plugin.settings.totalImages / 10);
+            }
+
             // Check plugin options
             Object.keys(plugin.settings).map(function(key, index) {
                 if (plugin.settings[key] === null) {
@@ -77,11 +82,6 @@
 
                 // remove images from DOM
                 $el.find('img.imageplay_loaded').detach();
-
-                // default frame rate
-                if ( ! plugin.settings.rate ) {
-                    plugin.settings.rate = parseInt(plugin.frames.length / 10);
-                }
 
                 // max rate is 100 fps and min rate is 0.001 fps
                 plugin.settings.rate = (plugin.settings.rate < 0.001) ? 0.001 : plugin.settings.rate;
