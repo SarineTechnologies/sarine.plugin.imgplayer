@@ -74,9 +74,10 @@ Following options are currently available for configuring the plugin.
 - `totalImages` - Number of images (mandatory)
 - `imageName` - Image nape pattern. Example: 'Image_{num}.jpg'. {num} is required inside a string (mandatory)
 - `urlDir` - URL of images directory (mandatory)
-- `rate` - Number of frames per second. Default is `totalImages / 10` (mandatory)
+- `rate` - Number of frames per second. Default is `totalImages / 10`
 - `height` - Height of canvas (mandatory) 
 - `width` - Width of canvas (mandatory)
-- `autoPlay` - is auto play, default true. If false, it's possible to run play on demand using `$('#imageplayer').data('imgplay').play();`
-- `autoReverse` - is auto reverse, default false. If true plays the images from 0-N and then N-0 and so on
-- `userInteraction` - enable user interaction - mouse/touch events, default true
+- `autoPlay` - boolean, is auto play, default true. If false, it's possible to run play on demand using `$('#imageplayer').data('imgplay').play();`
+- `autoReverse` - boolean, is auto reverse, default false. If true plays the images from 0-N and then N-0 and so on
+- `userInteraction` - boolean, enable user interaction - mouse/touch events, default true
+- `sharding` - boolean, enable domain sharding, default false

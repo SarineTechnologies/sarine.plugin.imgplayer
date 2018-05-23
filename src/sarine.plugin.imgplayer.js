@@ -19,12 +19,12 @@
             autoPlay: true,
             autoReverse: false,
             userInteraction: true,
-            interactionMode: 'default'
+            interactionMode: 'default',
+            sharding: false
         };
 
         var el = element;
         var $el = $(element);
-
         var $canvas = null;
         var screen = null;
         var playing = false;
@@ -40,6 +40,15 @@
         var imgExist = true;
         plugin.settings = {};
         plugin.frames = [];
+        var cdn_subdomains = window.cdn_subdomains || [];
+
+        plugin.getShardingURL = function (url, imgNum) {
+            if (plugin.settings.sharding && cdn_subdomains.length) {
+                shard =  cdn_subdomains[imgNum % cdn_subdomains.length]; 
+                return url.replace(/\/[^.]*/, '//' + shard)
+            }
+            return url;
+        }
 
         plugin.init = function() {
             plugin.settings = $.extend({}, defaults, options);
@@ -59,12 +68,12 @@
             var img;
             total = plugin.settings.totalImages;
 
-            img = '<img src="' + plugin.settings.urlDir.replace('{num}', plugin.settings.startImage) + '" />';                      
+            img = '<img src="' + plugin.getShardingURL(plugin.settings.urlDir, plugin.settings.startImage).replace('{num}', plugin.settings.startImage) + '" />';                      
             $(img).get(0).onload = function() {
                 $el.trigger('firstimgloaded');
 
                 for (var i = plugin.settings.startImage; i < plugin.settings.totalImages + plugin.settings.startImage; ++i) {
-                    img = '<img class="imageplay_loaded" src="' + plugin.settings.urlDir.replace('{num}', i) + '" />';
+                    img = '<img class="imageplay_loaded" src="' + plugin.getShardingURL(plugin.settings.urlDir, i).replace('{num}', i) + '" />';
                     $el.append(img);
                     // plugin.frames[i+1] = $(img).get(0);
                     plugin.frames[i] = $(img).get(0);
