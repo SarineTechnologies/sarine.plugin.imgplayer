@@ -76,7 +76,11 @@
             img = '<img src="' + plugin.getShardingURL(plugin.settings.urlDir, plugin.settings.startImage).replace('{num}', plugin.settings.startImage) + '" />';                      
             $(img).get(0).onload = function() {
                 $el.trigger('firstimgloaded');
-
+                
+                $(img).prop({height: options.height, width: options.width});
+                $(img).css("max-width" , "100%");
+                $el.append(img);
+                
                 for (var i = plugin.settings.startImage; i < plugin.settings.totalImages + plugin.settings.startImage; ++i) {
                     img = '<img class="imageplay_loaded" src="' + plugin.getShardingURL(plugin.settings.urlDir, i).replace('{num}', i) + '" />';
                     $el.append(img);
