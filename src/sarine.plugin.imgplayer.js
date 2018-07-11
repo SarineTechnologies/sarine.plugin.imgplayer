@@ -73,13 +73,13 @@
             var img;
             total = plugin.settings.totalImages;
 
-            img = '<img src="' + plugin.getShardingURL(plugin.settings.urlDir, plugin.settings.startImage).replace('{num}', plugin.settings.startImage) + '" />';                      
-            $(img).get(0).onload = function() {
+            img = new Image();
+            //img = '<img src="' + plugin.getShardingURL(plugin.settings.urlDir, plugin.settings.startImage).replace('{num}', plugin.settings.startImage) + '" />';                      
+            //$(img).get(0).onload = function() {
+                img.onload =  function() {
+
                 $el.trigger('firstimgloaded');
-                
-                $(img).prop({height: options.height, width: options.width});
-                $(img).css("max-width" , "100%");
-                $el.append(img);
+            
                 
                 for (var i = plugin.settings.startImage; i < plugin.settings.totalImages + plugin.settings.startImage; ++i) {
                     img = '<img class="imageplay_loaded" src="' + plugin.getShardingURL(plugin.settings.urlDir, i).replace('{num}', i) + '" />';
@@ -112,11 +112,16 @@
                     plugin.play();
                 }
                 else {
-                    setTimeout(function () {
-                        plugin.toFrame(plugin.settings.startImage == 0 ? 1 : plugin.settings.startImage);
-                    }, 500);
+                    var imageLoadedInterval = setInterval(function () {
+                        if($(img).get(0).complete)
+                        {
+                            clearInterval(imageLoadedInterval);
+                            plugin.toFrame(plugin.settings.startImage == 0 ? 1 : plugin.settings.startImage);
+                        }
+                    }, 100);
                 }
             };
+            img.src = plugin.getShardingURL(plugin.settings.urlDir, plugin.settings.startImage).replace('{num}', plugin.settings.startImage);                      
         };
 
         plugin.play = function() {
@@ -302,7 +307,7 @@
                     screen.clearRect(0, 0, cw, ch);
                     screen.drawImage(img, (cw - vw) / 2, (ch - vh) / 2, vw, vh);*/
                     //screen.clearRect(0, 0, options.width, options.height);
-                    screen.drawImage(img, 0, 0, options.width, options.height);                
+                    screen.drawImage(img, 0, 0, options.width, options.height);
                 }
                 else
                     imgExist = false;
