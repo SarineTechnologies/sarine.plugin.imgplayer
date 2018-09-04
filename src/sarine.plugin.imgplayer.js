@@ -52,6 +52,14 @@
 
         plugin.init = function() {
             plugin.settings = $.extend({}, defaults, options);
+
+            // Create canvas
+            $canvas = $('<canvas class="imgplay-canvas">');
+            // $canvas.prop({height: $(plugin.frames[0]).height(), width: $(plugin.frames[0]).width()});
+            $canvas.prop({height: options.height, width: options.width});
+            
+            screen = $canvas.get(0).getContext('2d');
+            $el.append($canvas);
             
             // default frame rate
             if ( ! plugin.settings.rate ) {
@@ -76,29 +84,21 @@
             img = new Image();
             //img = '<img src="' + plugin.getShardingURL(plugin.settings.urlDir, plugin.settings.startImage).replace('{num}', plugin.settings.startImage) + '" />';                      
             //$(img).get(0).onload = function() {
-                img.onload =  function() {
+            img.onload =  function() {
 
                 $el.trigger('firstimgloaded');
-            
-                
-                for (var i = plugin.settings.startImage; i < plugin.settings.totalImages + plugin.settings.startImage; ++i) {
+                            
+                var frameCount = 0;
+                for (var i = plugin.settings.startImage; i < plugin.settings.totalImages; ++i) {
                     img = '<img class="imageplay_loaded" src="' + plugin.getShardingURL(plugin.settings.urlDir, i).replace('{num}', i) + '" />';
                     $el.append(img);
-                    // plugin.frames[i+1] = $(img).get(0);
-                    plugin.frames[i] = $(img).get(0);
+                    plugin.frames[frameCount] = $(img).get(0);
+                    frameCount++;
                 }
             
                 $el.addClass('sarine_imgplay');
                 $el.css({height: options.height, width: options.width});
                 
-                // Create canvas
-                $canvas = $('<canvas class="imgplay-canvas">');
-                // $canvas.prop({height: $(plugin.frames[0]).height(), width: $(plugin.frames[0]).width()});
-                $canvas.prop({height: options.height, width: options.width});
-                
-                screen = $canvas.get(0).getContext('2d');
-                $el.append($canvas);
-
                 initEvents();
 
                 // remove images from DOM
@@ -235,6 +235,7 @@
                 var img = plugin.frames[index];
                 var $img = $(img);
                 if (img && img.complete && $img.prop('naturalHeight') > 0) {
+                    screen.clearRect(0, 0, options.width, options.height);
                     screen.drawImage(img, 0, 0, options.width, options.height);  
                 }
 
@@ -306,7 +307,8 @@
                     }
                     screen.clearRect(0, 0, cw, ch);
                     screen.drawImage(img, (cw - vw) / 2, (ch - vh) / 2, vw, vh);*/
-                    //screen.clearRect(0, 0, options.width, options.height);
+
+                    screen.clearRect(0, 0, options.width, options.height);
                     screen.drawImage(img, 0, 0, options.width, options.height);
                 }
                 else
