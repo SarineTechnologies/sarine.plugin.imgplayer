@@ -260,12 +260,14 @@
                     default:
                         progress
                         .on('mousedown touchstart', function(e) {
-                            e.preventDefault();
+                            if (e.cancelable) 
+                                e.preventDefault();
                             isUserInteraction = true;
                             startMove(e);                
                         })
                         .on('mousemove touchmove', function(e) {
-                            e.preventDefault();
+                            if (e.cancelable) 
+                                e.preventDefault();
                             if( !playing && !plugin.settings.autoPlay && !isUserInteraction )
                                 return;
                             move(e);
