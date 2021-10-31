@@ -2,39 +2,44 @@
 
 var argv = require('yargs').argv;
 var gulp = require('gulp');
-var gutil = require('gulp-util');
 var gulpif = require('gulp-if');
-var sass = require('gulp-sass');
+const sass = require('gulp-sass')(require('sass'));
 var eslint = require('gulp-eslint');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var connect = require('gulp-connect');
 var maps   = require('gulp-sourcemaps');
+const sync = require('gulp4-run-sequence');
 var dist = decideDist();
 
-gulp.task('default', ['watch', 'copy-src', 'sass', 'lint', 'uglify', 'webserver']);
-gulp.task('build', ['copy-src', 'sass', 'uglify']);
+gulp.task('default', async function(done) {
+    sync('watch', 'copy-src', 'sass', 'lint', 'uglify', 'webserver', done);
+  });
 
-gulp.task('webserver', function() {
+  gulp.task('build', async function(done) {
+    sync('copy-src', 'sass', 'uglify', done);
+  });
+
+gulp.task('webserver', async () => {
     connect.server({
         livereload: true,
         root: ['./web/']
     });
 });
 
-gulp.task('sass', function() {
+gulp.task('sass', async () => {
     return gulp.src('./src/sarine.plugin.imgplayer.scss')
         .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
         .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest(dist));
 });
 
-gulp.task('copy-src', function() {
+gulp.task('copy-src', async () => {
     return gulp.src('./src/sarine.plugin.imgplayer.js')
         .pipe(gulp.dest(dist));
 });
 
-gulp.task('uglify', function() {
+gulp.task('uglify', async () => {
     return gulp.src('./src/sarine.plugin.imgplayer.js')
         .pipe(maps.init({loadMaps: true}))
         .pipe(uglify())
@@ -43,7 +48,7 @@ gulp.task('uglify', function() {
         .pipe(gulp.dest(dist));
 });
 
-gulp.task('lint', function() {
+gulp.task('lint', async () => {
     return gulp.src('./src/sarine.plugin.imgplayer.js')
         .pipe(eslint({
             'rules': {
@@ -55,7 +60,7 @@ gulp.task('lint', function() {
         .pipe(eslint.failOnError());
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', async () => {
     if(!argv.production) { 
         gulp.watch('./src/sarine.plugin.imgplayer.scss', ['sass']);
         gulp.watch('./src/sarine.plugin.imgplayer.js', ['lint','uglify']);
